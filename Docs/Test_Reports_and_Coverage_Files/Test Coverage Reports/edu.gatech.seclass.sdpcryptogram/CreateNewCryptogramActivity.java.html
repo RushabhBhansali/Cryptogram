@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CreateNewCryptogramActivity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">edu.gatech.seclass.sdpcryptogram</a> &gt; <span class="el_source">CreateNewCryptogramActivity.java</span></div><h1>CreateNewCryptogramActivity.java</h1><pre class="source lang-java linenums">package edu.gatech.seclass.sdpcryptogram;
+import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.content.Intent;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+<span class="fc" id="L23">public class CreateNewCryptogramActivity extends AppCompatActivity{</span>
+
+    //error strings
+<span class="fc" id="L26">    String CRYPTONAME_ALREADY_EXISTS = &quot;This name already exists&quot;;</span>
+<span class="fc" id="L27">    String MISSING_FIELD = &quot;This field is required!&quot;;</span>
+<span class="fc" id="L28">    String NO_ATTEMPTS = &quot;Must be at least 1&quot;;</span>
+
+    String currentUser;
+
+    //these are the fields chosen by the user in the form
+    EditText enteredCryptoName;
+    EditText enteredSolutionPhrase;
+    EditText enteredMaxAttempts;
+    TextView phraseDisplay;
+
+    //these are the fields when parsed by the event listeners
+<span class="fc" id="L39">    String cryptoName = &quot;&quot;;</span>
+<span class="fc" id="L40">    String solutionPhrase = &quot;&quot;;</span>
+<span class="fc" id="L41">    String encodedPhrase = &quot;&quot;;</span>
+<span class="fc" id="L42">    int maxAttempts = 3;</span>
+
+    //some spinners for substitution letters
+    Spinner destCharSpinner;
+    Spinner sourceCharSpinner;
+
+    //the spinners will map to the alphabetical substitutions, which will be initialized as a like-for-like mapping
+    Map&lt;Character, Character&gt; characterHashMap;
+<span class="fc" id="L50">    int sourceLetterSelectionIndex = 0;</span>
+<span class="fc" id="L51">    int destinationLetterSelectionIndex = 0;</span>
+<span class="fc" id="L52">    Character sourceLetter = 'A';</span>
+<span class="fc" id="L53">    Character destinationLetter = 'A';</span>
+<span class="fc" id="L54">    char[] letterArray = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};</span>
+    //and of course, the database is needed to insert new cryptograms and check for unique names
+    DB mydb;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L60">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L61">        setContentView(R.layout.activity_create_new_cryptogram);</span>
+
+<span class="fc" id="L63">        currentUser = getIntent().getStringExtra(&quot;CurrentUser&quot;);</span>
+
+<span class="fc" id="L65">        mydb = new DB(this);</span>
+
+<span class="fc" id="L67">        enteredCryptoName = (EditText) findViewById(R.id.editText_CreateNewCryptogram_puzzleName);</span>
+<span class="fc" id="L68">        enteredSolutionPhrase = (EditText) findViewById(R.id.editText_CreateNewCryptogram_solutionPhrase);</span>
+<span class="fc" id="L69">        enteredMaxAttempts = (EditText) findViewById(R.id.editText_CreateNewCryptogram_maxAttempts);</span>
+<span class="fc" id="L70">        phraseDisplay = (TextView) findViewById(R.id.textView_CreateNewCryptogram_decodedPhrase);</span>
+
+        //to start off, all the letters map to themselves
+<span class="fc" id="L73">        characterHashMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L74">        characterHashMap.put('a', 'a');</span>
+<span class="fc" id="L75">        characterHashMap.put('b', 'b');</span>
+<span class="fc" id="L76">        characterHashMap.put('c', 'c');</span>
+<span class="fc" id="L77">        characterHashMap.put('d', 'd');</span>
+<span class="fc" id="L78">        characterHashMap.put('e', 'e');</span>
+<span class="fc" id="L79">        characterHashMap.put('f', 'f');</span>
+<span class="fc" id="L80">        characterHashMap.put('g', 'g');</span>
+<span class="fc" id="L81">        characterHashMap.put('h', 'h');</span>
+<span class="fc" id="L82">        characterHashMap.put('i', 'i');</span>
+<span class="fc" id="L83">        characterHashMap.put('j', 'j');</span>
+<span class="fc" id="L84">        characterHashMap.put('k', 'k');</span>
+<span class="fc" id="L85">        characterHashMap.put('l', 'l');</span>
+<span class="fc" id="L86">        characterHashMap.put('m', 'm');</span>
+<span class="fc" id="L87">        characterHashMap.put('n', 'n');</span>
+<span class="fc" id="L88">        characterHashMap.put('o', 'o');</span>
+<span class="fc" id="L89">        characterHashMap.put('p', 'p');</span>
+<span class="fc" id="L90">        characterHashMap.put('q', 'q');</span>
+<span class="fc" id="L91">        characterHashMap.put('r', 'r');</span>
+<span class="fc" id="L92">        characterHashMap.put('s', 's');</span>
+<span class="fc" id="L93">        characterHashMap.put('t', 't');</span>
+<span class="fc" id="L94">        characterHashMap.put('u', 'u');</span>
+<span class="fc" id="L95">        characterHashMap.put('v', 'v');</span>
+<span class="fc" id="L96">        characterHashMap.put('w', 'w');</span>
+<span class="fc" id="L97">        characterHashMap.put('x', 'x');</span>
+<span class="fc" id="L98">        characterHashMap.put('y', 'y');</span>
+<span class="fc" id="L99">        characterHashMap.put('z', 'z');</span>
+
+        //when the user enters a new cryptoname, save it.
+<span class="fc" id="L102">        enteredCryptoName.addTextChangedListener(new TextWatcher() {</span>
+            public void afterTextChanged(Editable s) {
+<span class="fc" id="L104">                cryptoName = s.toString();</span>
+<span class="fc" id="L105">            }</span>
+<span class="fc" id="L106">            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}</span>
+<span class="fc" id="L107">            public void onTextChanged(CharSequence s, int start, int before, int count) {}</span>
+        });
+
+<span class="fc" id="L110">        enteredSolutionPhrase.addTextChangedListener(new TextWatcher() {</span>
+            public void afterTextChanged(Editable s) {
+<span class="fc" id="L112">                solutionPhrase = s.toString();</span>
+<span class="fc" id="L113">                updateDisplayedEncodedPhrase(solutionPhrase);</span>
+<span class="fc" id="L114">            }</span>
+<span class="fc" id="L115">            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}</span>
+<span class="fc" id="L116">            public void onTextChanged(CharSequence s, int start, int before, int count) {}</span>
+        });
+
+<span class="fc" id="L119">        enteredMaxAttempts.addTextChangedListener(new TextWatcher() {</span>
+            public void afterTextChanged(Editable s) {
+<span class="fc bfc" id="L121" title="All 2 branches covered.">                if (s.toString().length() == 0) {</span>
+<span class="fc" id="L122">                    maxAttempts = 0;</span>
+                } else {
+<span class="fc" id="L124">                    maxAttempts = Integer.parseInt(s.toString());</span>
+                }
+<span class="fc" id="L126">            }</span>
+<span class="fc" id="L127">            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}</span>
+<span class="fc" id="L128">            public void onTextChanged(CharSequence s, int start, int before, int count) {}</span>
+        });
+
+        //populate the source char spinner with possible letter selections from strings.xml file
+<span class="fc" id="L132">        sourceCharSpinner = (Spinner) findViewById(R.id.Spinner_CreateNewCryptogram_NewLetterFrom);</span>
+<span class="fc" id="L133">        ArrayAdapter&lt;CharSequence&gt; sourceCharAdapter = ArrayAdapter.createFromResource(</span>
+                this, R.array.letters_array, android.R.layout.simple_spinner_item);
+
+<span class="fc" id="L136">        sourceCharAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);</span>
+<span class="fc" id="L137">        sourceCharSpinner.setAdapter(sourceCharAdapter);</span>
+
+        //define a listener for the spinner to set the Text
+<span class="fc" id="L140">        sourceCharSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {</span>
+            @Override
+            public void onItemSelected(AdapterView&lt;?&gt; adapterView, View view, int position, long id) {
+<span class="fc" id="L143">                sourceLetterSelectionIndex = position;</span>
+<span class="fc" id="L144">                sourceLetter = letterArray[position];</span>
+<span class="fc" id="L145">            }</span>
+            @Override
+<span class="nc" id="L147">            public void onNothingSelected(AdapterView&lt;?&gt; adapterView) {}</span>
+        });
+
+        //do the same for the destination char spinner
+<span class="fc" id="L151">        destCharSpinner = (Spinner) findViewById(R.id.Spinner_CreateNewCryptogram_NewLetterTo);</span>
+<span class="fc" id="L152">        ArrayAdapter&lt;CharSequence&gt; destCharAdapter = ArrayAdapter.createFromResource(</span>
+                this, R.array.letters_array, android.R.layout.simple_spinner_item);
+
+<span class="fc" id="L155">        destCharAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);</span>
+<span class="fc" id="L156">        destCharSpinner.setAdapter(destCharAdapter);</span>
+
+        //define a listener for the spinner to set the Text
+<span class="fc" id="L159">        destCharSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {</span>
+            @Override
+            public void onItemSelected(AdapterView&lt;?&gt; adapterView, View view, int position, long id) {
+<span class="fc" id="L162">                destinationLetterSelectionIndex = position;</span>
+<span class="fc" id="L163">                destinationLetter = letterArray[position];</span>
+<span class="fc" id="L164">            }</span>
+            @Override
+<span class="nc" id="L166">            public void onNothingSelected(AdapterView&lt;?&gt; adapterView) {}</span>
+        });
+
+
+        //when you hit the add button for a character mapping, you update the characters
+        //Run button functionality which will set error messages
+<span class="fc" id="L172">        Button addLetterButton = (Button) findViewById(R.id.Button_CreateNewCryptogram_NewLetterSave);</span>
+<span class="fc" id="L173">        addLetterButton.setOnClickListener(new View.OnClickListener() {</span>
+
+            @Override
+            public void onClick(View v) {
+                //find the letters and substitute them in the character map
+<span class="fc" id="L178">                characterHashMap.put(Character.toLowerCase(sourceLetter), Character.toLowerCase(destinationLetter));</span>
+
+                //and now update the display string how it looks
+<span class="fc" id="L181">                updateDisplayedEncodedPhrase(solutionPhrase);</span>
+<span class="fc" id="L182">            }</span>
+        });
+
+        //when you save a cryptogram, add it to the DB and move back to the home screen, assuming all went well.
+<span class="fc" id="L186">        Button saveButton = (Button) findViewById(R.id.button_CreateNewCryptogram_saveCryptogram);</span>
+<span class="fc" id="L187">        saveButton.setOnClickListener(new View.OnClickListener() {</span>
+
+            @Override
+            public void onClick(View v) {
+
+<span class="fc bfc" id="L192" title="All 2 branches covered.">                if (!cryptogramIsSolvable(solutionPhrase, encodedPhrase)) {</span>
+<span class="fc" id="L193">                    destCharSpinner.requestFocus();</span>
+<span class="fc" id="L194">                    Toast.makeText(CreateNewCryptogramActivity.this, &quot;This cryptogram is unsolvable!&quot;, Toast.LENGTH_LONG).show();</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">                } else if (cryptoName.length() &lt; 1) {</span>
+<span class="fc" id="L196">                    enteredCryptoName.requestFocus();</span>
+<span class="fc" id="L197">                    enteredCryptoName.setError(MISSING_FIELD);</span>
+<span class="fc bfc" id="L198" title="All 2 branches covered.">                } else if (solutionPhrase.length() &lt; 1) {</span>
+<span class="fc" id="L199">                    enteredSolutionPhrase.requestFocus();</span>
+<span class="fc" id="L200">                    enteredSolutionPhrase.setError(MISSING_FIELD);</span>
+<span class="fc bfc" id="L201" title="All 2 branches covered.">                } else if (maxAttempts &lt; 1) {</span>
+<span class="fc" id="L202">                    enteredMaxAttempts.requestFocus();</span>
+<span class="fc" id="L203">                    enteredMaxAttempts.setError(NO_ATTEMPTS);</span>
+                } else {
+<span class="fc" id="L205">                    boolean successfulInsert = mydb.insertCryptogram(cryptoName, solutionPhrase, encodedPhrase, maxAttempts);</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">                    if (successfulInsert) {</span>
+<span class="fc" id="L207">                        Toast.makeText(CreateNewCryptogramActivity.this, &quot;Cryptogram Created! Wahoo!&quot;, Toast.LENGTH_LONG).show();</span>
+<span class="fc" id="L208">                        Intent myIntent = new Intent(CreateNewCryptogramActivity.this,</span>
+                                PlayerHomeScreenActivity.class);
+<span class="fc" id="L210">                        myIntent.putExtra(&quot;CurrentUser&quot;, currentUser);</span>
+<span class="fc" id="L211">                        startActivity(myIntent);</span>
+<span class="fc" id="L212">                        finish();</span>
+<span class="fc" id="L213">                    } else {</span>
+<span class="fc" id="L214">                        enteredCryptoName.requestFocus();</span>
+<span class="fc" id="L215">                        enteredCryptoName.setError(CRYPTONAME_ALREADY_EXISTS);</span>
+                    }
+                }
+<span class="fc" id="L218">            }</span>
+        });
+<span class="fc" id="L220">    }</span>
+
+    /** An unsolvable cryptogram is one such that multiple letters in the solution phrase map to the same letter in the char map.
+     * We will test for this and return an error String if the cryptogram is unsolvable, otherwise return an empty string
+     */
+    public boolean cryptogramIsSolvable(String solution, String encoded) {
+        Character curSolutionLetter;
+        Character curEncodedLetter;
+
+<span class="fc bfc" id="L229" title="All 2 branches covered.">        for (int i=0; i&lt;solution.length(); i++) {</span>
+<span class="fc" id="L230">            curSolutionLetter = Character.toLowerCase(solution.charAt(i));</span>
+<span class="fc" id="L231">            curEncodedLetter = Character.toLowerCase(encoded.charAt(i));</span>
+
+<span class="fc bfc" id="L233" title="All 2 branches covered.">            if (curEncodedLetter.charValue() != curSolutionLetter.charValue()) {</span>
+<span class="fc bfc" id="L234" title="All 2 branches covered.">                for (int j=0; j&lt;solution.length(); j++) {</span>
+<span class="fc bfc" id="L235" title="All 2 branches covered.">                    if (Character.toLowerCase(encoded.charAt(j)) == curEncodedLetter) {</span>
+<span class="fc bfc" id="L236" title="All 2 branches covered.">                        if (Character.toLowerCase(solution.charAt(j)) != curSolutionLetter) {</span>
+<span class="fc" id="L237">                            return false;</span>
+                        }
+                    }
+                }
+            }
+        }
+<span class="fc" id="L243">        return true;</span>
+    }
+
+    /**here we will update a string according to the character hash map and the phrase in question. this
+     * preserves capitalization, and doesn't actually replace other characters that aren't in the hash map.
+     */
+    public void updateDisplayedEncodedPhrase(String phrase) {
+        Character cur;
+<span class="fc" id="L251">        StringBuilder display = new StringBuilder();</span>
+<span class="fc bfc" id="L252" title="All 2 branches covered.">        for (int i=0; i&lt;phrase.length(); i++) {</span>
+<span class="fc" id="L253">            cur = phrase.charAt(i);</span>
+
+            //substitute characters accordingly
+<span class="fc bfc" id="L256" title="All 2 branches covered.">            if (characterHashMap.containsKey(Character.toLowerCase(cur))) {</span>
+<span class="fc bfc" id="L257" title="All 2 branches covered.">                if (Character.isUpperCase(cur)) {</span>
+<span class="fc" id="L258">                    display.append(Character.toUpperCase(characterHashMap.get(Character.toLowerCase(cur))));</span>
+                } else {
+<span class="fc" id="L260">                    display.append(characterHashMap.get(cur));</span>
+                }
+
+            } else {
+<span class="fc" id="L264">                display.append(cur);</span>
+            }
+
+        }
+<span class="fc" id="L268">        encodedPhrase = display.toString();</span>
+<span class="fc" id="L269">        phraseDisplay.setText(encodedPhrase);</span>
+<span class="fc" id="L270">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.1.2</div></body></html>

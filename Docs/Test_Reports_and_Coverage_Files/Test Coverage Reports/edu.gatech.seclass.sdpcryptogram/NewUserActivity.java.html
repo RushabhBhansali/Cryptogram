@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NewUserActivity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">edu.gatech.seclass.sdpcryptogram</a> &gt; <span class="el_source">NewUserActivity.java</span></div><h1>NewUserActivity.java</h1><pre class="source lang-java linenums">package edu.gatech.seclass.sdpcryptogram;
+
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.Button;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.content.Intent;
+import android.widget.EditText;
+
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+<span class="fc" id="L17">public class NewUserActivity extends AppCompatActivity {</span>
+
+    //TODO - migrate to strings file, perhaps fleshing these out into more informative errors.
+<span class="fc" id="L20">    String NON_UNIQUE_USERNAME_ERROR = &quot;Username already exists&quot;;</span>
+<span class="fc" id="L21">    String MISSING_FIELD_ERROR = &quot;This field is required&quot;;</span>
+<span class="fc" id="L22">    String INVALID_EMAIL = &quot;Not a valid email address!&quot;;</span>
+
+    //local variables for the new stuff entered by the user
+<span class="fc" id="L25">    String newUsername = &quot;&quot;;</span>
+    EditText newUsernameEditText;
+
+<span class="fc" id="L28">    String newFirstName = &quot;&quot;;</span>
+    EditText newFirstNameEditText;
+
+<span class="fc" id="L31">    String newLastName = &quot;&quot;;</span>
+    EditText newLastNameEditText;
+
+<span class="fc" id="L34">    String newEmail = &quot;&quot;;</span>
+    EditText newEmailEditText;
+
+    Button runButton;
+
+    DB mydb;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L43">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L44">        setContentView(R.layout.activity_new_user);</span>
+
+<span class="fc" id="L46">        mydb = new DB(this);</span>
+
+        //define a reference for the editText to get new user information, for each of the four fields
+<span class="fc" id="L49">        newUsernameEditText = (EditText) findViewById(R.id.newUserName);</span>
+<span class="fc" id="L50">        newUsernameEditText.addTextChangedListener(new TextWatcher() {</span>
+
+            public void afterTextChanged(Editable s) {
+<span class="fc" id="L53">                newUsername = s.toString();</span>
+<span class="fc" id="L54">            }</span>
+<span class="fc" id="L55">            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}</span>
+<span class="fc" id="L56">            public void onTextChanged(CharSequence s, int start, int before, int count) {}</span>
+        });
+
+<span class="fc" id="L59">        newFirstNameEditText = (EditText) findViewById(R.id.newUserFirstName);</span>
+<span class="fc" id="L60">        newFirstNameEditText.addTextChangedListener(new TextWatcher() {</span>
+
+            public void afterTextChanged(Editable s) {
+<span class="fc" id="L63">                newFirstName = s.toString();</span>
+<span class="fc" id="L64">            }</span>
+<span class="fc" id="L65">            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}</span>
+<span class="fc" id="L66">            public void onTextChanged(CharSequence s, int start, int before, int count) {}</span>
+        });
+
+<span class="fc" id="L69">        newLastNameEditText = (EditText) findViewById(R.id.newUserLastName);</span>
+<span class="fc" id="L70">        newLastNameEditText.addTextChangedListener(new TextWatcher() {</span>
+
+            public void afterTextChanged(Editable s) {
+<span class="fc" id="L73">                newLastName = s.toString();</span>
+<span class="fc" id="L74">            }</span>
+<span class="fc" id="L75">            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}</span>
+<span class="fc" id="L76">            public void onTextChanged(CharSequence s, int start, int before, int count) {}</span>
+        });
+
+<span class="fc" id="L79">        newEmailEditText = (EditText) findViewById(R.id.newUserEmail);</span>
+<span class="fc" id="L80">        newEmailEditText.addTextChangedListener(new TextWatcher() {</span>
+
+            public void afterTextChanged(Editable s) {
+<span class="fc" id="L83">                newEmail = s.toString();</span>
+<span class="fc" id="L84">            }</span>
+<span class="fc" id="L85">            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}</span>
+<span class="fc" id="L86">            public void onTextChanged(CharSequence s, int start, int before, int count) {}</span>
+        });
+
+<span class="fc" id="L89">        runButton = (Button) findViewById(R.id.runButton);</span>
+<span class="fc" id="L90">        runButton.setOnClickListener(new View.OnClickListener() {</span>
+
+            @Override
+            public void onClick(View v) {
+
+                //TODO - finish this input validation
+<span class="fc" id="L96">                newUsernameEditText.setError(null);</span>
+<span class="fc" id="L97">                newFirstNameEditText.setError(null);</span>
+<span class="fc" id="L98">                newLastNameEditText.setError(null);</span>
+<span class="fc" id="L99">                newEmailEditText.setError(null);</span>
+
+<span class="fc bfc" id="L101" title="All 2 branches covered.">                if(newUsername.length() &lt; 1) {</span>
+<span class="fc" id="L102">                    newUsernameEditText.requestFocus();</span>
+<span class="fc" id="L103">                    newUsernameEditText.setError(MISSING_FIELD_ERROR);</span>
+                }
+
+<span class="fc bfc" id="L106" title="All 2 branches covered.">                else if(newFirstName.length() &lt; 1) {</span>
+<span class="fc" id="L107">                    newFirstNameEditText.requestFocus();</span>
+<span class="fc" id="L108">                    newFirstNameEditText.setError(MISSING_FIELD_ERROR);</span>
+                }
+
+<span class="fc bfc" id="L111" title="All 2 branches covered.">                else if(newLastName.length() &lt; 1) {</span>
+<span class="fc" id="L112">                    newLastNameEditText.requestFocus();</span>
+<span class="fc" id="L113">                    newLastNameEditText.setError(MISSING_FIELD_ERROR);</span>
+                }
+
+                //TODO - better test here. regex or something on a valid email
+<span class="fc bfc" id="L117" title="All 2 branches covered.">                else if(newEmail.length() &lt; 1) {</span>
+<span class="fc" id="L118">                    newEmailEditText.requestFocus();</span>
+<span class="fc" id="L119">                    newEmailEditText.setError(MISSING_FIELD_ERROR);</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">                } else if (!emailIsValid(newEmail)) {</span>
+<span class="fc" id="L121">                    newEmailEditText.requestFocus();</span>
+<span class="fc" id="L122">                    newEmailEditText.setError(INVALID_EMAIL);</span>
+                } else {
+<span class="fc" id="L124">                    boolean createdPlayer = mydb.insertPlayer(newUsername, newFirstName, newLastName, newEmail);</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">                    if (!createdPlayer) {</span>
+<span class="fc" id="L126">                        newUsernameEditText.requestFocus();</span>
+<span class="fc" id="L127">                        newUsernameEditText.setError(NON_UNIQUE_USERNAME_ERROR);</span>
+                    } else {
+                        //TODO - this just brings them to the login page, maybe add a message or something?
+<span class="fc" id="L130">                        Intent myIntent = new Intent(NewUserActivity.this,</span>
+                                LoginActivity.class);
+<span class="fc" id="L132">                        startActivity(myIntent);</span>
+<span class="fc" id="L133">                        finish();</span>
+                    }
+                }
+<span class="fc" id="L136">            }</span>
+
+        });
+<span class="fc" id="L139">    }</span>
+
+    //RFC 822 compliant email regex courtesy of https://stackoverflow.com/questions/8204680/java-regex-email/13013056#13013056
+<span class="fc" id="L142">    public static final Pattern EMAIL_REGEX = Pattern.compile(&quot;(?:(?:\\r\\n)?[ \\t])*(?:(?:(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\&quot;(?:[^\\\&quot;\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\&quot;(?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\&quot;(?:[^\\\&quot;\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\&quot;(?:(?:\\r\\n)?[ \\t])*))*@(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*))*|(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\&quot;(?:[^\\\&quot;\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\&quot;(?:(?:\\r\\n)?[ \\t])*)*\\&lt;(?:(?:\\r\\n)?[ \\t])*(?:@(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*))*(?:,@(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*))*)*:(?:(?:\\r\\n)?[ \\t])*)?(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\&quot;(?:[^\\\&quot;\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\&quot;(?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\&quot;(?:[^\\\&quot;\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\&quot;(?:(?:\\r\\n)?[ \\t])*))*@(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*))*\\&gt;(?:(?:\\r\\n)?[ \\t])*)|(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\&quot;(?:[^\\\&quot;\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\&quot;(?:(?:\\r\\n)?[ \\t])*)*:(?:(?:\\r\\n)?[ \\t])*(?:(?:(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\&quot;(?:[^\\\&quot;\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\&quot;(?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\&quot;(?:[^\\\&quot;\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\&quot;(?:(?:\\r\\n)?[ \\t])*))*@(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*))*|(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\&quot;(?:[^\\\&quot;\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\&quot;(?:(?:\\r\\n)?[ \\t])*)*\\&lt;(?:(?:\\r\\n)?[ \\t])*(?:@(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*))*(?:,@(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*))*)*:(?:(?:\\r\\n)?[ \\t])*)?(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\&quot;(?:[^\\\&quot;\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\&quot;(?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\&quot;(?:[^\\\&quot;\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\&quot;(?:(?:\\r\\n)?[ \\t])*))*@(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*))*\\&gt;(?:(?:\\r\\n)?[ \\t])*)(?:,\\s*(?:(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\&quot;(?:[^\\\&quot;\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\&quot;(?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\&quot;(?:[^\\\&quot;\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\&quot;(?:(?:\\r\\n)?[ \\t])*))*@(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*))*|(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\&quot;(?:[^\\\&quot;\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\&quot;(?:(?:\\r\\n)?[ \\t])*)*\\&lt;(?:(?:\\r\\n)?[ \\t])*(?:@(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*))*(?:,@(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*))*)*:(?:(?:\\r\\n)?[ \\t])*)?(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\&quot;(?:[^\\\&quot;\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\&quot;(?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\&quot;(?:[^\\\&quot;\\r\\\\]|\\\\.|(?:(?:\\r\\n)?[ \\t]))*\&quot;(?:(?:\\r\\n)?[ \\t])*))*@(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*)(?:\\.(?:(?:\\r\\n)?[ \\t])*(?:[^()&lt;&gt;@,;:\\\\\&quot;.\\[\\] \\000-\\031]+(?:(?:(?:\\r\\n)?[ \\t])+|\\Z|(?=[\\[\&quot;()&lt;&gt;@,;:\\\\\&quot;.\\[\\]]))|\\[([^\\[\\]\\r\\\\]|\\\\.)*\\](?:(?:\\r\\n)?[ \\t])*))*\\&gt;(?:(?:\\r\\n)?[ \\t])*))*)?;\\s*)&quot;);</span>
+
+    public boolean emailIsValid(String address) {
+<span class="fc" id="L145">        Matcher matcher = EMAIL_REGEX.matcher(address);</span>
+<span class="fc" id="L146">        return matcher.find();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.1.2</div></body></html>

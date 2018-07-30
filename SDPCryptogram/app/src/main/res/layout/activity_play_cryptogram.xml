@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PlayCryptogramActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/PlayCryptogramHorizontalRow1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView_PlayCryptogram_screenTitle"
+                style="@style/style_textView_screenTitle"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Solve Cryptogram"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/PlayCryptogramHorizontalRow2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView_PlayCryptogram_puzzleNameLabel"
+                android:labelFor="@id/textView_PlayCryptogram_puzzleName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="2"
+                android:text="Puzzle Name:" />
+
+            <TextView
+                android:id="@+id/textView_PlayCryptogram_puzzleName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:ems="10"
+                android:inputType="text"
+                android:text="" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/PlayCryptogramHorizontalRow3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/textView_PlayCryptogram_AttemptsTakenLabel"
+                android:labelFor="@id/textView_PlayCryptogram_AttemptsTaken"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:layout_marginLeft="5dp"
+                android:text="Attempts Taken:" />
+
+            <TextView
+                android:id="@+id/textView_PlayCryptogram_AttemptsTaken"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:ems="10"
+                android:inputType="number"
+                android:text="" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/PlayCryptogramHorizontalRow4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/textView_PlayCryptogram_AttemptsRemainingLabel"
+                android:labelFor="@id/textView_PlayCryptogram_AttemptsRemaining"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:layout_marginLeft="5dp"
+                android:text="Attempts Remaining:" />
+
+            <TextView
+                android:id="@+id/textView_PlayCryptogram_AttemptsRemaining"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:ems="10"
+                android:inputType="number"
+                android:text="" />
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:id="@+id/PlayCryptogramHorizontalRow5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView_PlayCryptogram_EncodedPhraseLabel"
+                android:labelFor="@id/textView_PlayCryptogram_EncodedPhrase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:layout_marginLeft="5dp"
+                android:textSize="14dp"
+                android:text="Cryptogram Text:" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/PlayCryptogramHorizontalRow6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView_PlayCryptogram_EncodedPhrase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="3"
+                android:textSize="20dp"
+                android:inputType="text"
+                android:text="" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/PlayCryptogramHorizontalRow7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView_PlayCryptogram_NewLetterFromLabel"
+                android:labelFor="@id/Spinner_PlayCryptogram_NewLetterFrom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp"
+                android:text="Encoded Letter:" />
+            <TextView
+                android:id="@+id/textView_PlayCryptogram_NewLetterToLabel"
+                android:labelFor="@id/Spinner_PlayCryptogram_NewLetterTo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Decoded Letter:" />
+            <TextView
+                android:id="@+id/textView_PlayCryptogram_NewLetterSaveLabel"
+                android:labelFor="@id/Button_PlayCryptogram_NewLetterSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/PlayCryptogramHorizontalRow8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/Spinner_PlayCryptogram_NewLetterFrom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1">
+            </Spinner>
+            <Spinner
+                android:id="@+id/Spinner_PlayCryptogram_NewLetterTo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+            </Spinner>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/PlayCryptogramHorizontalRow9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/Button_PlayCryptogram_NewLetterSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="100dp"
+                android:layout_marginRight="100dp"
+                android:layout_weight="1"
+                android:text="Add Letter Substitution" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/PlayCryptogramHorizontalRow10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/textView_PlayCryptogram_decodedPhraseLabel"
+                android:labelFor="@+id/textView_PlayCryptogram_decodedPhrase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp"
+                android:text="Your Current Solution:" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/PlayCryptogramHorizontalRow11"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView_PlayCryptogram_decodedPhrase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
+                android:textSize="20dp"
+                android:text="" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/PlayCryptogramHorizontalRow12"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button_PlayCryptogram_attemptSolution"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_weight="1"
+                android:text="Attempt Solution" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

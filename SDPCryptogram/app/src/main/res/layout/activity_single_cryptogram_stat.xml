@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".SingleCryptogramStatActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:id="@+id/SingleCryptogramStatHorizontalRow1"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView_SingleCryptogramStat_ScreenTitle"
+                style="@style/style_textView_screenTitle"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cryptogram Full Statistics"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/SingleCryptogramStatHorizontalRow2"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView_SingleCryptogramStat_NameLabel"
+                android:labelFor="@+id/textView_SingleCryptogramStat_Name"
+                style="@style/style_textView_screenTitle"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:layout_weight="1"
+                android:text="Name:"/>
+
+            <TextView
+                android:id="@+id/textView_SingleCryptogramStat_Name"
+                style="@style/style_textView_screenTitle"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:textSize="20dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/SingleCryptogramStatHorizontalRow3"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView_SingleCryptogramStat_CreationDateLabel"
+                android:labelFor="@+id/textView_SingleCryptogramStat_CreationDate"
+                style="@style/style_textView_screenTitle"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:layout_weight="1"
+                android:text="Created On:"/>
+
+            <TextView
+                android:id="@+id/textView_SingleCryptogramStat_CreationDate"
+                style="@style/style_textView_screenTitle"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:layout_weight="1"
+                android:text=""/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/SingleCryptogramStatHorizontalRow4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView_SingleCryptogramStat_NumSolversLabel"
+                android:labelFor="@+id/textView_SingleCryptogramStat_NumSolvers"
+                style="@style/style_textView_screenTitle"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="20dp"
+                android:text="Times Solved:"/>
+
+            <TextView
+                android:id="@+id/textView_SingleCryptogramStat_NumSolvers"
+                style="@style/style_textView_screenTitle"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="20dp"
+                android:text=""/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/SingleCryptogramStatHorizontalRow5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView_SingleCryptogramStat_Top3SolversLabel"
+                style="@style/style_textView_screenTitle"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="20dp"
+                android:text="Top 3 Solvers:"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/SingleCryptogramStatHorizontalRow6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView_SingleCryptogramStat_FirstSolver"
+                style="@style/style_textView_screenTitle"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="20dp"
+                android:text="1."/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/SingleCryptogramStatHorizontalRow7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView_SingleCryptogramStat_SecondSolver"
+                style="@style/style_textView_screenTitle"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="20dp"
+                android:text="2. "/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/SingleCryptogramStatHorizontalRow8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView_SingleCryptogramStat_ThirdSolver"
+                style="@style/style_textView_screenTitle"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="20dp"
+                android:text="3. "/>
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>

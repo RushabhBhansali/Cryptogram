@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PlayerHomeScreenActivity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">edu.gatech.seclass.sdpcryptogram</a> &gt; <span class="el_source">PlayerHomeScreenActivity.java</span></div><h1>PlayerHomeScreenActivity.java</h1><pre class="source lang-java linenums">package edu.gatech.seclass.sdpcryptogram;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.Button;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.content.Intent;
+
+<span class="fc" id="L9">public class PlayerHomeScreenActivity extends AppCompatActivity{</span>
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState){
+
+<span class="fc" id="L14">        final String currentUser = getIntent().getStringExtra(&quot;CurrentUser&quot;);</span>
+
+<span class="fc" id="L16">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L17">        setContentView(R.layout.activity_player_home_screen);</span>
+
+<span class="fc" id="L19">        Button createNewCryptogramButton = (Button) findViewById(R.id.button_playerHomeScreen_CreateNewCryptogram);</span>
+<span class="fc" id="L20">        Button listOfUnsolvedCryptogram = (Button) findViewById(R.id.button_playerHomeScreen_ListOfUnsolvedCryptograms);</span>
+<span class="fc" id="L21">        Button listOfCompletedCryptogram = (Button) findViewById(R.id.button_playerHomeScreen_ListOfCompletedCryptogram);</span>
+<span class="fc" id="L22">        Button cryptogramStat = (Button) findViewById(R.id.button_playerHomeScreen_CryptogramStatistics);</span>
+<span class="fc" id="L23">        Button switchUser = (Button) findViewById(R.id.button_playerHomeScreen_SwitchUser);</span>
+
+<span class="fc" id="L25">        createNewCryptogramButton.setOnClickListener(new OnClickListener(){</span>
+            public void onClick(View arg0){
+<span class="fc" id="L27">                Intent intent  = new Intent(PlayerHomeScreenActivity.this, CreateNewCryptogramActivity.class);</span>
+<span class="fc" id="L28">                intent.putExtra(&quot;CurrentUser&quot;, currentUser);</span>
+<span class="fc" id="L29">                startActivity(intent);</span>
+<span class="fc" id="L30">            }</span>
+        });
+
+<span class="fc" id="L33">        listOfUnsolvedCryptogram.setOnClickListener(new OnClickListener(){</span>
+            public void onClick(View arg0){
+<span class="fc" id="L35">                Intent intent  = new Intent(PlayerHomeScreenActivity.this, ListOfUnSolvedActivity.class);</span>
+<span class="fc" id="L36">                intent.putExtra(&quot;CurrentUser&quot;, currentUser);</span>
+<span class="fc" id="L37">                startActivity(intent);</span>
+<span class="fc" id="L38">            }</span>
+        });
+
+<span class="fc" id="L41">        listOfCompletedCryptogram.setOnClickListener(new OnClickListener(){</span>
+            public void onClick(View arg0){
+<span class="fc" id="L43">                Intent intent  = new Intent(PlayerHomeScreenActivity.this, ListOfCompletedActivity.class);</span>
+<span class="fc" id="L44">                intent.putExtra(&quot;CurrentUser&quot;, currentUser);</span>
+<span class="fc" id="L45">                startActivity(intent);</span>
+<span class="fc" id="L46">            }</span>
+        });
+
+<span class="fc" id="L49">        cryptogramStat.setOnClickListener(new OnClickListener(){</span>
+            public void onClick(View arg0){
+<span class="fc" id="L51">                Intent intent  = new Intent(PlayerHomeScreenActivity.this, CryptogramStatActivity.class);</span>
+<span class="fc" id="L52">                intent.putExtra(&quot;CurrentUser&quot;, currentUser);</span>
+<span class="fc" id="L53">                startActivity(intent);</span>
+<span class="fc" id="L54">            }</span>
+        });
+
+<span class="fc" id="L57">        switchUser.setOnClickListener(new OnClickListener(){</span>
+            public void onClick(View arg0){
+<span class="fc" id="L59">                Intent intent  = new Intent(PlayerHomeScreenActivity.this, MainActivity.class);</span>
+<span class="fc" id="L60">                startActivity(intent);</span>
+<span class="fc" id="L61">                finish();</span>
+<span class="fc" id="L62">            }</span>
+        });
+
+
+
+<span class="fc" id="L67">    }</span>
+
+
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.1.2</div></body></html>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ListOfCompletedActivity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">edu.gatech.seclass.sdpcryptogram</a> &gt; <span class="el_source">ListOfCompletedActivity.java</span></div><h1>ListOfCompletedActivity.java</h1><pre class="source lang-java linenums">package edu.gatech.seclass.sdpcryptogram;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+
+<span class="fc" id="L16">public class ListOfCompletedActivity extends AppCompatActivity{</span>
+
+    ArrayList&lt;DB.CompletedCryptogram&gt; solvedPuzzles;
+    ArrayList&lt;String&gt; expiredPuzzles;
+    DB mydb;
+    ListView listViewCol1;
+    ListView listViewCol2;
+    ListView listViewCol3;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+<span class="fc" id="L27">        super.onCreate(savedInstanceState);</span>
+<span class="fc" id="L28">        setContentView(R.layout.activity_list_of_completed);</span>
+
+<span class="fc" id="L30">        final String currentUser = getIntent().getStringExtra(&quot;CurrentUser&quot;);</span>
+
+<span class="fc" id="L32">        mydb = new DB(this);</span>
+<span class="fc" id="L33">        ArrayList column1Data = new ArrayList(); //puzzle names</span>
+<span class="fc" id="L34">        ArrayList column2Data = new ArrayList(); //status</span>
+<span class="fc" id="L35">        ArrayList column3Data = new ArrayList(); //dates completed</span>
+
+        //first fill the data with solved cryptograms
+<span class="fc" id="L38">        solvedPuzzles = mydb.ListSolved(currentUser);</span>
+
+        long curDate;
+        String dateFormat;
+<span class="fc" id="L42">        String pattern = &quot;MM-dd-yyyy&quot;;</span>
+<span class="fc" id="L43">        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);</span>
+
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        for (int i=0; i&lt;solvedPuzzles.size(); i++) {</span>
+<span class="fc" id="L46">            column1Data.add(solvedPuzzles.get(i).cryptoName);</span>
+<span class="fc" id="L47">            column2Data.add(&quot;Solved&quot;);</span>
+<span class="fc" id="L48">            curDate = solvedPuzzles.get(i).dateCompleted;</span>
+<span class="fc" id="L49">            dateFormat = simpleDateFormat.format(new Date(curDate));</span>
+<span class="fc" id="L50">            column3Data.add(dateFormat);</span>
+        }
+
+        //and also get all the ones that didn't get solved, but have no attempts remaining
+<span class="fc" id="L54">        expiredPuzzles = mydb.ListExpiredPuzzles(currentUser);</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        for (int i=0; i&lt;expiredPuzzles.size(); i++) {</span>
+<span class="fc" id="L56">            column1Data.add(expiredPuzzles.get(i));</span>
+<span class="fc" id="L57">            column2Data.add(&quot;Failed&quot;);</span>
+<span class="fc" id="L58">            column3Data.add(&quot;n/a&quot;);</span>
+        }
+
+        //now we create the columns and populate them with the data one by one
+<span class="fc" id="L62">        listViewCol1 = (ListView) findViewById(R.id.listview_listCompleted_CryptogramNameColumn);</span>
+<span class="fc" id="L63">        listViewCol2 = (ListView) findViewById(R.id.listview_listCompleted_StatusColumn);</span>
+<span class="fc" id="L64">        listViewCol3 = (ListView) findViewById(R.id.listview_listCompleted_DateColumn);</span>
+
+
+<span class="fc" id="L67">        ArrayAdapter&lt;String&gt; arrayAdapter = new ArrayAdapter&lt;String&gt; (</span>
+                this,
+                android.R.layout.simple_list_item_1,
+                column1Data );
+
+<span class="fc" id="L72">        listViewCol1.setAdapter(arrayAdapter);</span>
+
+<span class="fc" id="L74">        ArrayAdapter&lt;String&gt; arrayAdapter2 = new ArrayAdapter&lt;String&gt; (</span>
+                this,
+                android.R.layout.simple_list_item_1,
+                column2Data );
+
+<span class="fc" id="L79">        listViewCol2.setAdapter(arrayAdapter2);</span>
+
+<span class="fc" id="L81">        ArrayAdapter&lt;String&gt; arrayAdapter3 = new ArrayAdapter&lt;String&gt; (</span>
+                this,
+                android.R.layout.simple_list_item_1,
+                column3Data );
+
+<span class="fc" id="L86">        listViewCol3.setAdapter(arrayAdapter3);</span>
+<span class="fc" id="L87">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.1.2</div></body></html>

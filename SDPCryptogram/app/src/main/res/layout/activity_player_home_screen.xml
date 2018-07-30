@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView_playerHomeScreen_screenTitle"
+        style="@style/style_textView_screenTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:text="Player Home Screen"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_playerHomeScreen_CreateNewCryptogram"
+        style="@style/style_button"
+        android:layout_width="234dp"
+        android:layout_height="wrap_content"
+        android:text="Create New Cryptogram"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_playerHomeScreen_screenTitle"
+        app:layout_constraintVertical_bias="0.08" />
+
+    <Button
+        android:id="@+id/button_playerHomeScreen_ListOfUnsolvedCryptograms"
+        style="@style/style_button"
+        android:layout_width="232dp"
+        android:layout_height="wrap_content"
+        android:text="List of Unsolved Cryptograms"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_playerHomeScreen_CreateNewCryptogram"
+        app:layout_constraintVertical_bias="0.11" />
+
+    <Button
+        android:id="@+id/button_playerHomeScreen_ListOfCompletedCryptogram"
+        style="@style/style_button"
+        android:layout_width="235dp"
+        android:layout_height="wrap_content"
+        android:text="List of Completed Cryptograms"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_playerHomeScreen_ListOfUnsolvedCryptograms"
+        app:layout_constraintVertical_bias="0.14" />
+
+    <Button
+        android:id="@+id/button_playerHomeScreen_CryptogramStatistics"
+        style="@style/style_button"
+        android:layout_width="235dp"
+        android:layout_height="wrap_content"
+        android:text="Cryptogram Statistics"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_playerHomeScreen_ListOfCompletedCryptogram"
+        app:layout_constraintVertical_bias="0.17" />
+
+    <Button
+        android:id="@+id/button_playerHomeScreen_SwitchUser"
+        style="@style/style_button"
+        android:layout_width="235dp"
+        android:layout_height="wrap_content"
+        android:text="Switch User"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_playerHomeScreen_CryptogramStatistics"
+        app:layout_constraintVertical_bias="0.2" />
+
+</android.support.constraint.ConstraintLayout>

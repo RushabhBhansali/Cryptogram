@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".CreateNewCryptogramActivity">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentEnd="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/CreateNewCryptogramHorizontalRow1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView_createNewCryptogram_screenTitle"
+            style="@style/style_textView_screenTitle"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Create New Cryptogram"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/CreateNewCryptogramHorizontalRow2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView_CreateNewCryptogram_puzzleNameLabel"
+            android:labelFor="@id/editText_CreateNewCryptogram_puzzleName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="2"
+            android:text="Puzzle Name:" />
+
+        <EditText
+            android:id="@+id/editText_CreateNewCryptogram_puzzleName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:ems="10"
+            android:inputType="text"
+            android:text="" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/CreateNewCryptogramHorizontalRow3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/textView_CreateNewCryptogram_solutionPhraseLabel"
+            android:labelFor="@id/editText_CreateNewCryptogram_solutionPhrase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_marginLeft="5dp"
+            android:text="Solution:" />
+
+        <EditText
+            android:id="@+id/editText_CreateNewCryptogram_solutionPhrase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:ems="10"
+            android:inputType="text"
+            android:text="" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/CreateNewCryptogramHorizontalRow4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/textView_createNewCryptogram_MaxAttemptsLabel"
+            android:labelFor="@id/editText_CreateNewCryptogram_maxAttempts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="2"
+            android:text="Max Attempts:" />
+
+        <EditText
+            android:id="@+id/editText_CreateNewCryptogram_maxAttempts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:ems="10"
+            android:inputType="number"
+            android:text="3" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/CreateNewCryptogramHorizontalRow5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView_createNewCryptogram_NewLetterFromLabel"
+            android:labelFor="@id/Spinner_CreateNewCryptogram_NewLetterFrom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            android:text="Source Letter:" />
+        <TextView
+            android:id="@+id/textView_createNewCryptogram_NewLetterToLabel"
+            android:labelFor="@id/Spinner_CreateNewCryptogram_NewLetterTo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Substitution Letter:" />
+        <TextView
+            android:id="@+id/textView_createNewCryptogram_NewLetterSaveLabel"
+            android:labelFor="@id/Button_CreateNewCryptogram_NewLetterSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/CreateNewCryptogramHorizontalRow6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/Spinner_CreateNewCryptogram_NewLetterFrom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1">
+        </Spinner>
+        <Spinner
+            android:id="@+id/Spinner_CreateNewCryptogram_NewLetterTo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+        </Spinner>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/CreateNewCryptogramHorizontalRow7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/Button_CreateNewCryptogram_NewLetterSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="100dp"
+            android:layout_weight="1"
+            android:text="Add Letter Substitution" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/CreateNewCryptogramHorizontalRow8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/textView_CreateNewCryptogram_decodedPhraseLabel"
+            android:labelFor="@+id/textView_CreateNewCryptogram_decodedPhrase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            android:text="Your Cryptogram Will Appear As:" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/CreateNewCryptogramHorizontalRow9"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView_CreateNewCryptogram_decodedPhrase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="18dp"
+            android:layout_marginLeft="5dp"
+            android:text="" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/CreateNewCryptogramHorizontalRow10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_CreateNewCryptogram_saveCryptogram"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_weight="1"
+            android:text="Save Cryptogram" />
+    </LinearLayout>
+</LinearLayout>
+</RelativeLayout>

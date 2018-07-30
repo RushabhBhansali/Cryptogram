@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView_createNewCryptogram_screenTitle"
+        style="@style/style_textView_screenTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:text="Create New Cryptogram"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/textView_CreateNewCryptogram_puzzleNameLabel"
+        style="@style/style_TextView_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="Puzzle Name:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_createNewCryptogram_screenTitle" />
+
+    <EditText
+        android:id="@+id/editText_CreateNewCryptogram_puzzleName"
+        style="@style/style_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:inputType="text|textNoSuggestions"
+        android:padding="0dp"
+        android:text="hiae"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_CreateNewCryptogram_puzzleNameLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/textView_CreateNewCryptogram_puzzleNameLabel" />
+
+
+    <TextView
+        android:id="@+id/textView_CreateNewCryptogram_solutionPhraseLabel"
+        style="@style/style_TextView_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="Solution Phrase: "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_CreateNewCryptogram_puzzleNameLabel" />
+
+    <EditText
+        android:id="@+id/editText_CreateNewCryptogram_solutionPhrase"
+        style="@style/style_editText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:padding="0dp"
+        android:text="hhhhhh "
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/textView_CreateNewCryptogram_solutionPhraseLabel"
+        app:layout_constraintTop_toTopOf="@+id/textView_CreateNewCryptogram_solutionPhraseLabel" />
+
+
+    <TextView
+        android:id="@+id/textView_createNewCryptogram_MaxAttemptsLabel"
+        style="@style/style_TextView_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="Max Attempts allowed: "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_CreateNewCryptogram_solutionPhrase" />
+
+    <EditText
+        android:id="@+id/editText_CreateNewCryptogram_maxAttempts"
+        style="@style/style_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:inputType="number"
+        android:padding="0dp"
+        android:text="12"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_createNewCryptogram_MaxAttemptsLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/textView_createNewCryptogram_MaxAttemptsLabel" />
+
+    <TextView
+        android:id="@+id/textView_createNewCryptogram_caeserShiftValueLabel"
+        style="@style/style_TextView_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="Caeser Shift Value: "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_CreateNewCryptogram_maxAttempts" />
+
+    <EditText
+        android:id="@+id/editText_CreateNewCryptogram_caeserShiftValue"
+        style="@style/style_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:inputType="numberSigned"
+        android:padding="0dp"
+        android:text="-2"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_createNewCryptogram_caeserShiftValueLabel"
+        app:layout_constraintStart_toEndOf="@+id/textView_createNewCryptogram_caeserShiftValueLabel" />
+
+    <Button
+        android:id="@+id/button_CreateNewCryptogram_checkEncodedPhrase"
+        style="@style/style_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Check Decoded Phrase"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_createNewCryptogram_caeserShiftValueLabel"
+        app:layout_constraintVertical_bias="0.15" />
+
+    <TextView
+        android:id="@+id/textView_CreateNewCryptogram_decodedPhrase"
+        style="@style/style_TextView_output"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:padding="0dp"
+        android:text="kjkl"
+        app:layout_constraintBottom_toBottomOf="@+id/button_CreateNewCryptogram_checkEncodedPhrase"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/button_CreateNewCryptogram_checkEncodedPhrase"
+        app:layout_constraintTop_toTopOf="@+id/button_CreateNewCryptogram_checkEncodedPhrase" />
+
+    <Button
+        android:id="@+id/button_CreateNewCryptogram_saveCryptogram"
+        style="@style/style_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Save Cryptogram"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.85"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_CreateNewCryptogram_decodedPhrase"
+        app:layout_constraintVertical_bias="0.9" />
+
+
+</android.support.constraint.ConstraintLayout>

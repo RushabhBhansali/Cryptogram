@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DB.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=0;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">debugAndroidTest</a> &gt; <a href="index.source.html" class="el_package">edu.gatech.seclass.sdpcryptogram</a> &gt; <span class="el_source">DB.java</span></div><h1>DB.java</h1><pre class="source lang-java linenums">package edu.gatech.seclass.sdpcryptogram;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+
+public class DB {
+
+    // JM - Added helper function to check for valid string input
+    // Base on: https://stackoverflow.com/questions/3598770/check-whether-a-string-is-not-null-and-not-empty
+    private static boolean empty(final String s) {
+<span class="fc bfc" id="L17" title="All 4 branches covered.">        return !(s != null &amp;&amp; !(s.trim().isEmpty()));</span>
+    }
+
+    private DBHelper dbHelper;
+    private SQLiteDatabase database; //made public for easier testing
+
+    //TODO - remove ability for SQL injections with some parameter binding in this list of methods
+    //TODO - go through these and make db.close() calls for all the methods.
+    //TODO - i stopped writing database = dbHelper.getWritable/Readable, used db instead. start using database again. saves memory
+
+<span class="fc" id="L27">    public DB(Context context) {</span>
+        //System.out.println(&quot;Calling the DB constructor&quot;);
+<span class="fc" id="L29">        dbHelper = new DBHelper(context);</span>
+<span class="fc" id="L30">        database = dbHelper.getWritableDatabase();</span>
+<span class="fc" id="L31">    }</span>
+
+    public DBHelper getHelper() {
+<span class="fc" id="L34">        return this.dbHelper;</span>
+    }
+
+    public SQLiteDatabase getDatabase() {
+<span class="fc" id="L38">        return this.database;</span>
+    }
+
+    public boolean databaseIsOpen() {
+<span class="fc" id="L42">        return this.database.isOpen();</span>
+    }
+
+    public void closeDatabase() {
+<span class="fc" id="L46">        this.database.close();</span>
+<span class="fc" id="L47">    }</span>
+
+    public boolean resetDatabases() {
+<span class="fc" id="L50">        database = dbHelper.getWritableDatabase();</span>
+<span class="fc" id="L51">        database.execSQL(&quot;DROP TABLE IF EXISTS players&quot;);</span>
+<span class="fc" id="L52">        database.execSQL(&quot;DROP TABLE IF EXISTS cryptograms&quot;);</span>
+<span class="fc" id="L53">        database.execSQL(&quot;DROP TABLE IF EXISTS puzzles&quot;);</span>
+
+        // JM - Refactored for better ZLS / Null constraints/checks
+        //create players table
+<span class="fc" id="L57">        database.execSQL(</span>
+                &quot;create table players &quot; +
+                        &quot;(id integer primary key autoincrement,&quot; +
+                        &quot;username text not null check(length(username) &gt;=1 ),&quot; +
+                        &quot;firstname text not null check(length(firstname) &gt;=1 ),&quot; +
+                        &quot;lastname text not null check(length(lastname) &gt;=1 ),&quot; +
+                        &quot;email text not null check(length(email) &gt;=1 ),&quot; +
+                        &quot;CONSTRAINT unique_username UNIQUE (username) )&quot;
+        );
+
+        // JM - Refactored for better ZLS / Null constraints/checks
+        //create cryptograms table
+<span class="fc" id="L69">        database.execSQL(</span>
+                &quot;create table cryptograms &quot; +
+                        &quot;(id integer primary key autoincrement,&quot; +
+                        &quot;cryptoName text not null check(length(cryptoName) &gt;=1), &quot; +
+                        &quot;unencodedPhrase text not null check(length(unencodedPhrase) &gt;=1),&quot; +
+                        &quot;encryptionKey text not null check(length(encryptionKey) &gt;=1),&quot; +
+                        &quot;maxSolutionAttempts integer not null check(maxSolutionAttempts &gt; 0), &quot; +
+                        &quot;dateCreated numeric not null,&quot; +
+                        &quot;CONSTRAINT unique_cryptoname UNIQUE(cryptoName))&quot;
+        );
+
+        // JM - Refactored for better ZLS / Null constraints/checks
+        //create puzzles table
+<span class="fc" id="L82">        database.execSQL(</span>
+                &quot;create table puzzles &quot; +
+                        &quot;(username text not null check(length(username) &gt;=1), &quot; +
+                        &quot;cryptoName text not null check(length(cryptoName) &gt;=1), &quot; +
+                        &quot;dateCompleted numeric, &quot; +
+                        &quot;attempts integer not null, &quot; +
+                        &quot;successful integer not null, &quot; +
+                        &quot;FOREIGN KEY(username) REFERENCES players(username),&quot; +
+                        &quot;FOREIGN KEY(cryptoName) REFERENCES cryptograms(cryptoName))&quot;
+        );
+<span class="fc" id="L92">        database.close();</span>
+
+<span class="fc" id="L94">        return true;</span>
+    }
+
+    //TODO - kill these hardcoded column names
+    public boolean insertPlayer(String username, String firstname, String lastname, String email) {
+        // Preconditions
+<span class="fc bfc" id="L100" title="All 8 branches covered.">        if (empty(username) || empty(firstname) || empty(lastname) || empty(email))</span>
+<span class="fc" id="L101">            return false;</span>
+
+<span class="fc" id="L103">        ContentValues contentValues = new ContentValues();</span>
+<span class="fc" id="L104">        contentValues.put(&quot;username&quot;, username);</span>
+<span class="fc" id="L105">        contentValues.put(&quot;firstname&quot;, firstname);</span>
+<span class="fc" id="L106">        contentValues.put(&quot;lastname&quot;, lastname);</span>
+<span class="fc" id="L107">        contentValues.put(&quot;email&quot;, email);</span>
+
+<span class="fc" id="L109">        database = dbHelper.getWritableDatabase();</span>
+<span class="fc" id="L110">        long success = database.insert(&quot;players&quot;, null, contentValues);</span>
+
+        // JM - Refactored to single function exit point.
+<span class="fc" id="L113">        database.close();</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">        return (success != -1);</span>
+    }
+
+    public boolean playerExists(String username, String firstname, String lastname, String email) {
+        // Preconditions
+<span class="pc bpc" id="L119" title="4 of 8 branches missed.">        if (empty(username) || empty(firstname) || empty(lastname) || empty(email))</span>
+<span class="nc" id="L120">            return false;</span>
+
+<span class="fc" id="L122">        database = dbHelper.getReadableDatabase();</span>
+        boolean success;
+
+<span class="fc" id="L125">        Cursor cursor = database.rawQuery(&quot;SELECT * FROM players WHERE username = ? AND firstname = ? AND lastname = ? AND email = ?&quot;, new String[]{username, firstname, lastname, email});</span>
+
+        //System.out.println(cursor.getCount());
+
+<span class="fc bfc" id="L129" title="All 2 branches covered.">        if (cursor.getCount() == 1) {</span>
+<span class="fc" id="L130">            success = true;</span>
+        } else {
+<span class="fc" id="L132">            success = false;</span>
+        }
+<span class="fc" id="L134">        cursor.close();</span>
+<span class="fc" id="L135">        database.close();</span>
+<span class="fc" id="L136">        return success;</span>
+    }
+
+    //TODO - kill these hardcoded column names
+    // JM - Preconditions and minor refactoring
+    public boolean insertCryptogram(String cryptoName, String unencodedPhrase, String encryptionKey, int maxSolutionAttempts) {
+        // Preconditions
+<span class="fc bfc" id="L143" title="All 8 branches covered.">        if (empty(cryptoName) || empty(unencodedPhrase) || empty(encryptionKey) || maxSolutionAttempts &lt; 0)</span>
+<span class="fc" id="L144">            return false;</span>
+
+<span class="fc" id="L146">        ContentValues contentValues = new ContentValues();</span>
+
+<span class="fc" id="L148">        Date myDate = new Date(); //I have a date, I have a date! Better get my fancy shoes!</span>
+<span class="fc" id="L149">        long now = myDate.getTime();</span>
+
+<span class="fc" id="L151">        contentValues.put(&quot;cryptoName&quot;, cryptoName);</span>
+<span class="fc" id="L152">        contentValues.put(&quot;unencodedPhrase&quot;, unencodedPhrase);</span>
+<span class="fc" id="L153">        contentValues.put(&quot;encryptionKey&quot;, encryptionKey);</span>
+<span class="fc" id="L154">        contentValues.put(&quot;maxSolutionAttempts&quot;, maxSolutionAttempts);</span>
+<span class="fc" id="L155">        contentValues.put(&quot;dateCreated&quot;, now);</span>
+
+<span class="fc" id="L157">        database = dbHelper.getWritableDatabase();</span>
+<span class="fc" id="L158">        long success = database.insert(&quot;cryptograms&quot;, null, contentValues);</span>
+
+<span class="fc" id="L160">        database.close();</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">        return (success != -1);</span>
+    }
+
+    //verifies if a certain cryptogram exists in the database
+    // JM - Preconditions and variable name cleanup
+    public boolean cryptogramExists(String cryptoName, String unencodedPhrase, String encryptionKey, int maxSolutionAttempts) {
+        // Preconditions
+<span class="pc bpc" id="L168" title="4 of 8 branches missed.">        if (empty(cryptoName) || empty(unencodedPhrase) || empty(encryptionKey) || maxSolutionAttempts &lt; 0)</span>
+<span class="nc" id="L169">            return false;</span>
+
+<span class="fc" id="L171">        database = dbHelper.getReadableDatabase();</span>
+
+<span class="fc" id="L173">        Cursor cursor = database.rawQuery(&quot;SELECT * FROM cryptograms WHERE cryptoName = ? AND unencodedPhrase = ? AND encryptionKey = ? AND maxSolutionAttempts = ?&quot;, new String[]{cryptoName, unencodedPhrase, encryptionKey, Integer.toString(maxSolutionAttempts)});</span>
+
+        boolean success;
+<span class="fc bfc" id="L176" title="All 2 branches covered.">        if (cursor.getCount() == 1) {</span>
+<span class="fc" id="L177">            success = true;</span>
+        } else {
+<span class="fc" id="L179">            success = false;</span>
+        }
+<span class="fc" id="L181">        cursor.close();</span>
+<span class="fc" id="L182">        database.close();</span>
+<span class="fc" id="L183">        return success;</span>
+    }
+
+    //TODO - kill these hardcoded column names
+    // JM - Refactored for single exit point and took out the &quot;puzzleExists&quot; check - should not &quot;wrap&quot; methods.
+    // (Not just general practice, but also complicates unit testing greatly in this specific case)
+    public boolean insertPuzzle(String username, String cryptoName) {
+        // Preconditions
+<span class="fc bfc" id="L191" title="All 4 branches covered.">        if (empty(username) || empty(cryptoName))</span>
+<span class="fc" id="L192">            return false;</span>
+
+<span class="fc" id="L194">        ContentValues contentValues = new ContentValues();</span>
+<span class="fc" id="L195">        contentValues.put(&quot;username&quot;, username);</span>
+<span class="fc" id="L196">        contentValues.put(&quot;cryptoName&quot;, cryptoName);</span>
+<span class="fc" id="L197">        contentValues.put(&quot;successful&quot;, 0);</span>
+<span class="fc" id="L198">        contentValues.put(&quot;attempts&quot;, 0);</span>
+
+<span class="fc" id="L200">        database = dbHelper.getWritableDatabase();</span>
+<span class="fc" id="L201">        long success = database.insert(&quot;puzzles&quot;, null, contentValues);</span>
+
+<span class="fc" id="L203">        database.close();</span>
+<span class="pc bpc" id="L204" title="1 of 2 branches missed.">        return (success != -1);</span>
+    }
+
+    // JM - Preconditions and made public
+    public boolean markPuzzleSuccessful(String username, String cryptoName) {
+        // Preconditions
+<span class="fc bfc" id="L210" title="All 4 branches covered.">        if (empty(username) || empty(cryptoName))</span>
+<span class="fc" id="L211">            return false;</span>
+
+<span class="fc" id="L213">        database = dbHelper.getWritableDatabase();</span>
+<span class="fc" id="L214">        Date myDate = new Date(); //I have a date, I have a date! Better get my fancy shoes!</span>
+<span class="fc" id="L215">        long now = myDate.getTime();</span>
+<span class="fc" id="L216">        ContentValues contentValues = new ContentValues();</span>
+<span class="fc" id="L217">        contentValues.put(&quot;successful&quot;, 1);</span>
+<span class="fc" id="L218">        contentValues.put(&quot;dateCompleted&quot;, now);</span>
+
+<span class="fc" id="L220">        String[] args = new String[]{username, cryptoName};</span>
+
+<span class="fc" id="L222">        long marked = database.update(&quot;puzzles&quot;, contentValues, &quot;username=? AND cryptoName=?&quot;, args);</span>
+
+<span class="fc" id="L224">        database.close();</span>
+<span class="pc bpc" id="L225" title="1 of 2 branches missed.">        return (marked != -1);</span>
+    }
+
+
+    // JM - Preconditions and minor refactoring, made public
+    public boolean updatePuzzleAttempts(String username, String cryptoName, int attempts) {
+
+        //Preconditions
+<span class="fc bfc" id="L233" title="All 6 branches covered.">        if (empty(username) || empty(cryptoName) || (attempts &lt; 0)) {</span>
+<span class="fc" id="L234">            return false;</span>
+        }
+
+<span class="fc" id="L237">        database = dbHelper.getWritableDatabase();</span>
+<span class="fc" id="L238">        ContentValues contentValues = new ContentValues();</span>
+<span class="fc" id="L239">        contentValues.put(&quot;attempts&quot;, String.valueOf(attempts));</span>
+
+<span class="fc" id="L241">        String[] args = new String[]{username, cryptoName};</span>
+
+<span class="fc" id="L243">        long success = database.update(&quot;puzzles&quot;, contentValues, &quot;username=? AND cryptoName=?&quot;, args);</span>
+
+<span class="fc" id="L245">        database.close();</span>
+<span class="pc bpc" id="L246" title="1 of 2 branches missed.">        return (success != -1);</span>
+    }
+
+    // JM - Preconditions
+    public int getPuzzleAttempts(String username, String cryptoName) {
+        // Preconditions
+<span class="fc bfc" id="L252" title="All 4 branches covered.">        if (empty(username) || empty(cryptoName))</span>
+<span class="fc" id="L253">            return -1;</span>
+
+<span class="fc" id="L255">        database = dbHelper.getReadableDatabase();</span>
+
+<span class="fc" id="L257">        Cursor cursor = database.rawQuery(&quot;SELECT attempts FROM puzzles WHERE username = ? AND cryptoName = ?&quot;, new String[]{username, cryptoName});</span>
+<span class="pc bpc" id="L258" title="1 of 2 branches missed.">        if (cursor.getCount() &lt; 1) {</span>
+<span class="nc" id="L259">            cursor.close();</span>
+<span class="nc" id="L260">            database.close();</span>
+<span class="nc" id="L261">            return -1; //error</span>
+        } else {
+<span class="fc" id="L263">            cursor.moveToFirst();</span>
+<span class="fc" id="L264">            int attempts = cursor.getInt(cursor.getColumnIndex(&quot;attempts&quot;));</span>
+<span class="fc" id="L265">            cursor.close();</span>
+<span class="fc" id="L266">            database.close();</span>
+<span class="fc" id="L267">            return attempts;</span>
+        }
+    }
+
+    // JM - Preconditions and minor refactoring
+    // TODO: Should this include the username?
+    public boolean puzzleExists(String username, String cryptoName) {
+        // Preconditions
+<span class="fc bfc" id="L275" title="All 4 branches covered.">        if (empty(username) || empty(cryptoName))</span>
+<span class="fc" id="L276">            return false;</span>
+
+<span class="fc" id="L278">        database = dbHelper.getReadableDatabase();</span>
+<span class="fc" id="L279">        Cursor cursor = database.rawQuery(&quot;SELECT * FROM puzzles WHERE username = ? AND cryptoName = ?&quot;, new String[]{username, cryptoName});</span>
+
+<span class="fc bfc" id="L281" title="All 2 branches covered.">        boolean exists = (cursor.getCount() &gt; 0);</span>
+<span class="fc" id="L282">        cursor.close();</span>
+<span class="fc" id="L283">        database.close();</span>
+
+<span class="fc" id="L285">        return exists;</span>
+    }
+
+    /**
+     * checks a cryptogram solution. Will return
+     * 1 = solution is correct
+     * 0 = solution is not correct
+     * -1 = error occurred
+     */
+    // TODO: Refactor and clean logic (need username? return false for non-existing?)
+    public int checkSolution(String username, String cryptoName, String userSolution) {
+        // Preconditions
+<span class="pc bpc" id="L297" title="3 of 6 branches missed.">        if (empty(username) || empty(cryptoName) || empty(userSolution))</span>
+<span class="nc" id="L298">            return -1;</span>
+
+        boolean solutionIsCorrect;
+
+<span class="fc" id="L302">        database = dbHelper.getReadableDatabase();</span>
+<span class="fc" id="L303">        Cursor cursor = database.rawQuery(&quot;SELECT unencodedPhrase FROM cryptograms WHERE cryptoName = ?&quot;, new String[]{cryptoName});</span>
+<span class="pc bpc" id="L304" title="1 of 2 branches missed.">        if (cursor.getCount() &lt; 1) {</span>
+<span class="nc" id="L305">            return -2;</span>
+        } //couldnt find cryptogram.
+<span class="fc" id="L307">        cursor.moveToFirst();</span>
+
+        //System.out.println(&quot;Database correct solution is&quot;);
+        //System.out.println(cursor.getString(cursor.getColumnIndex(&quot;unencodedPhrase&quot;)));
+
+<span class="fc bfc" id="L312" title="All 2 branches covered.">        if (cursor.getString(cursor.getColumnIndex(&quot;unencodedPhrase&quot;)).equals(userSolution)) {</span>
+<span class="fc" id="L313">            solutionIsCorrect = true;</span>
+            //System.out.println(&quot;Solution is correct&quot;);
+        } else {
+<span class="fc" id="L316">            solutionIsCorrect = false;</span>
+            //System.out.println(&quot;Solution is not correct&quot;);
+        }
+
+        //if the solution is correct, we need to update the puzzles table to mark the user solved it
+<span class="fc bfc" id="L321" title="All 2 branches covered.">        if (solutionIsCorrect) {</span>
+<span class="fc" id="L322">            boolean marked = markPuzzleSuccessful(username, cryptoName);</span>
+<span class="pc bpc" id="L323" title="1 of 2 branches missed.">            if (!marked) {</span>
+<span class="nc" id="L324">                database.close();</span>
+<span class="nc" id="L325">                return -1;</span>
+            }
+            //System.out.println(&quot;Puzzle was marked&quot;);
+        }
+
+<span class="fc" id="L330">        int attempts = getPuzzleAttempts(username, cryptoName);</span>
+<span class="fc" id="L331">        attempts += 1;</span>
+
+        //System.out.println(&quot;Attempts is now:&quot; + String.valueOf(attempts));
+
+<span class="fc" id="L335">        boolean incremented = updatePuzzleAttempts(username, cryptoName, attempts);</span>
+
+        //System.out.println(&quot;Incrementing was successful&quot;);
+<span class="fc" id="L338">        database.close();</span>
+<span class="pc bpc" id="L339" title="1 of 2 branches missed.">        if (!incremented) {</span>
+<span class="nc" id="L340">            return -1;</span>
+<span class="fc bfc" id="L341" title="All 2 branches covered.">        } else if (solutionIsCorrect) {</span>
+            //System.out.println(&quot;Returning 1&quot;);
+<span class="fc" id="L343">            return 1;</span>
+        } else {
+            //System.out.println(&quot;Returning 0&quot;);
+<span class="fc" id="L346">            return 0;</span>
+        }
+    }
+
+    // JM - Preconditions and refactoring
+    public boolean loginPlayer(String username) {
+        // Preconditions
+<span class="fc bfc" id="L353" title="All 2 branches covered.">        if (empty(username))</span>
+<span class="fc" id="L354">            return false;</span>
+
+<span class="fc" id="L356">        SQLiteDatabase db = dbHelper.getReadableDatabase();</span>
+
+<span class="fc" id="L358">        Cursor cursor = db.query(&quot;players&quot;, new String[]{&quot;username&quot;, &quot;firstname&quot;}, &quot;username&quot; + &quot;=?&quot;,</span>
+                new String[]{username}, null, null, null, null);
+
+        //TODO - better logic here, at least something more robust. This works for an alpha though!
+<span class="fc bfc" id="L362" title="All 2 branches covered.">        boolean success = (cursor.getCount() == 1);</span>
+<span class="fc" id="L363">        cursor.close();</span>
+<span class="fc" id="L364">        db.close();</span>
+
+<span class="fc" id="L366">        return success;</span>
+    }
+
+
+    // TODO: Refactor and clean logic (1 SQL statement)
+    public HashMap&lt;String, Integer[]&gt; ListUnsolved(String username) {
+<span class="fc" id="L372">        SQLiteDatabase db = dbHelper.getReadableDatabase();</span>
+<span class="fc" id="L373">        HashMap&lt;String, Integer[]&gt; cryptMap = new HashMap&lt;&gt;(); //we will return cryptname -&gt; {attempts remaining, attempts taken}</span>
+        String curName;
+        Integer curAttempts;
+        Integer maxAttempts;
+
+        //we first need to get all the cryptograms from the cryptograms table
+<span class="fc" id="L379">        Cursor cursor = db.rawQuery(&quot;SELECT cryptoName, maxSolutionAttempts FROM cryptograms WHERE maxSolutionAttempts &gt; 0&quot;, null);</span>
+
+        try {
+<span class="fc bfc" id="L382" title="All 2 branches covered.">            while (cursor.moveToNext()) {</span>
+<span class="fc" id="L383">                curName = cursor.getString(cursor.getColumnIndex(&quot;cryptoName&quot;));</span>
+<span class="fc" id="L384">                maxAttempts = cursor.getInt(cursor.getColumnIndex(&quot;maxSolutionAttempts&quot;));</span>
+<span class="fc" id="L385">                cryptMap.put(curName, new Integer[]{maxAttempts, 0});</span>
+            }
+        } finally {
+<span class="pc" id="L388">            cursor.close();</span>
+<span class="fc" id="L389">        }</span>
+
+        //now we need to subtract away the puzzles that are successful for this user
+<span class="fc" id="L392">        cursor = db.rawQuery(&quot;SELECT cryptoName FROM puzzles WHERE successful = 1 AND username = ?&quot;, new String[]{username});</span>
+
+        try {
+<span class="fc bfc" id="L395" title="All 2 branches covered.">            while (cursor.moveToNext()) {</span>
+<span class="fc" id="L396">                curName = cursor.getString(cursor.getColumnIndex(&quot;cryptoName&quot;));</span>
+<span class="fc" id="L397">                cryptMap.remove(curName);</span>
+            }
+        } finally {
+<span class="pc" id="L400">            cursor.close();</span>
+<span class="fc" id="L401">        }</span>
+
+        //now we need to subtract away the solution attempts for puzzles they've already tried, but haven't solved
+<span class="fc" id="L404">        cursor = db.rawQuery(&quot;SELECT cryptoName, attempts FROM puzzles WHERE successful = 0 AND username = ?&quot;, new String[]{username});</span>
+
+        try {
+<span class="fc bfc" id="L407" title="All 2 branches covered.">            while (cursor.moveToNext()) {</span>
+<span class="fc" id="L408">                curName = cursor.getString(cursor.getColumnIndex(&quot;cryptoName&quot;));</span>
+<span class="fc" id="L409">                curAttempts = cursor.getInt(cursor.getColumnIndex(&quot;attempts&quot;));</span>
+<span class="fc" id="L410">                maxAttempts = cryptMap.get(curName)[0]; //we can safely get this key, because we know the cryptogram must exist</span>
+
+                //remove the cryptogram entirely if they have no attempts remaining
+<span class="fc bfc" id="L413" title="All 2 branches covered.">                if (maxAttempts - curAttempts == 0) {</span>
+<span class="fc" id="L414">                    cryptMap.remove(curName);</span>
+                } else {
+                    //otherwise just update the attempts
+<span class="fc" id="L417">                    cryptMap.put(curName, new Integer[]{maxAttempts - curAttempts, curAttempts}); //update with however many attempts you've failed with</span>
+                }
+            }
+        } finally {
+<span class="pc" id="L421">            cursor.close();</span>
+<span class="fc" id="L422">        }</span>
+
+<span class="fc" id="L424">        db.close();</span>
+<span class="fc" id="L425">        return cryptMap;</span>
+    }
+
+
+    // TODO: Refactor and document error/missing return
+    public String getCryptogramEncodedText(String cryptogramName) {
+
+<span class="fc" id="L432">        SQLiteDatabase db = dbHelper.getReadableDatabase();</span>
+        String encoded;
+
+<span class="fc" id="L435">        Cursor cursor = db.rawQuery(&quot;SELECT encryptionKey FROM cryptograms WHERE cryptoName = ?&quot;, new String[]{cryptogramName});</span>
+
+        try {
+<span class="fc" id="L438">            cursor.moveToFirst();</span>
+<span class="fc" id="L439">            encoded = cursor.getString(cursor.getColumnIndex(&quot;encryptionKey&quot;));</span>
+        } finally {
+<span class="pc" id="L441">            cursor.close();</span>
+<span class="fc" id="L442">        }</span>
+<span class="fc" id="L443">        db.close();</span>
+<span class="fc" id="L444">        return encoded;</span>
+    }
+
+    //TODO - might not necessarily be the best way of doing this.
+<span class="fc" id="L448">    public static class CompletedCryptogram {</span>
+        String cryptoName;
+        long dateCompleted;
+        int attempts;
+    }
+
+    public ArrayList&lt;CompletedCryptogram&gt; ListSolved(String username) {
+<span class="fc" id="L455">        SQLiteDatabase db = dbHelper.getReadableDatabase();</span>
+<span class="fc" id="L456">        ArrayList&lt;CompletedCryptogram&gt; cryptArray = new ArrayList&lt;&gt;(); //we will return cryptname -&gt; {attempts taken}</span>
+
+        //grab the cryptograms we've solved from the puzzles table for that user
+<span class="fc" id="L459">        Cursor cursor = db.rawQuery(&quot;SELECT cryptoName, attempts, dateCompleted FROM puzzles WHERE successful = 1 AND username = ?&quot;, new String[]{username});</span>
+
+        try {
+<span class="fc bfc" id="L462" title="All 2 branches covered.">            while (cursor.moveToNext()) {</span>
+<span class="fc" id="L463">                CompletedCryptogram completed = new CompletedCryptogram();</span>
+<span class="fc" id="L464">                completed.attempts = cursor.getInt(cursor.getColumnIndex(&quot;attempts&quot;));</span>
+<span class="fc" id="L465">                completed.cryptoName = cursor.getString(cursor.getColumnIndex(&quot;cryptoName&quot;));</span>
+<span class="fc" id="L466">                completed.dateCompleted = cursor.getLong(cursor.getColumnIndex(&quot;dateCompleted&quot;));</span>
+<span class="fc" id="L467">                cryptArray.add(completed);</span>
+<span class="fc" id="L468">            }</span>
+        } finally {
+<span class="pc" id="L470">            cursor.close();</span>
+<span class="fc" id="L471">        }</span>
+
+<span class="fc" id="L473">        db.close();</span>
+<span class="fc" id="L474">        return cryptArray;</span>
+    }
+
+    public ArrayList&lt;String&gt; ListExpiredPuzzles(String username) {
+<span class="fc" id="L478">        SQLiteDatabase db = dbHelper.getReadableDatabase();</span>
+<span class="fc" id="L479">        ArrayList&lt;String&gt; cryptArray = new ArrayList&lt;&gt;(); //just the names of the cryptograms</span>
+<span class="fc" id="L480">        Cursor cursor = db.rawQuery(&quot;SELECT DISTINCT p.cryptoName AS names FROM puzzles p INNER JOIN cryptograms c WHERE p.successful = 0 AND p.attempts = c.maxSolutionAttempts AND p.username = ?&quot;, new String[]{username});</span>
+
+        try {
+<span class="fc bfc" id="L483" title="All 2 branches covered.">            while (cursor.moveToNext()) {</span>
+<span class="fc" id="L484">                cryptArray.add(cursor.getString(cursor.getColumnIndex(&quot;names&quot;)));</span>
+            }
+        } finally {
+<span class="pc" id="L487">            cursor.close();</span>
+<span class="pc" id="L488">            db.close();</span>
+<span class="fc" id="L489">        }</span>
+<span class="fc" id="L490">        return cryptArray;</span>
+    }
+
+    public long getCryptogramCreationDate(String name) {
+<span class="fc" id="L494">        SQLiteDatabase db = dbHelper.getReadableDatabase();</span>
+<span class="fc" id="L495">        long creationDate = -1;</span>
+<span class="fc" id="L496">        Cursor cursor = db.rawQuery(&quot;SELECT dateCreated FROM cryptograms WHERE cryptoName = ?&quot;, new String[]{name});</span>
+
+<span class="pc bpc" id="L498" title="1 of 2 branches missed.">        if (cursor.getCount() &lt; 1) {</span>
+<span class="nc" id="L499">            cursor.close();</span>
+<span class="nc" id="L500">            db.close();</span>
+<span class="nc" id="L501">            return -1;</span>
+        } else {
+<span class="fc" id="L503">            cursor.moveToFirst();</span>
+<span class="fc" id="L504">            creationDate = cursor.getLong(cursor.getColumnIndex(&quot;dateCreated&quot;));</span>
+<span class="fc" id="L505">            cursor.close();</span>
+<span class="fc" id="L506">            db.close();</span>
+<span class="fc" id="L507">            return creationDate;</span>
+        }
+    }
+
+    public int getCryptogramNumTimesSolved(String name) {
+<span class="fc" id="L512">        SQLiteDatabase db = dbHelper.getReadableDatabase();</span>
+<span class="fc" id="L513">        int timesSolved = 0;</span>
+<span class="fc" id="L514">        Cursor cursor = db.rawQuery(&quot;SELECT COUNT(*) AS timesSolved FROM puzzles WHERE successful = 1 AND cryptoName = ?&quot;, new String[]{name});</span>
+
+<span class="pc bpc" id="L516" title="1 of 2 branches missed.">        if (cursor.getCount() &gt;= 1) {</span>
+<span class="fc" id="L517">            cursor.moveToFirst();</span>
+<span class="fc" id="L518">            timesSolved = cursor.getInt(cursor.getColumnIndex(&quot;timesSolved&quot;));</span>
+        }
+<span class="fc" id="L520">        cursor.close();</span>
+<span class="fc" id="L521">        db.close();</span>
+<span class="fc" id="L522">        return timesSolved;</span>
+    }
+
+    public void removeAllCryptograms() {
+<span class="nc" id="L526">        SQLiteDatabase db = dbHelper.getWritableDatabase();</span>
+<span class="nc" id="L527">        db.delete(&quot;cryptograms&quot;, null, null);</span>
+<span class="nc" id="L528">        db.close();</span>
+<span class="nc" id="L529">    }</span>
+
+    public void removeAllPlayers() {
+<span class="nc" id="L532">        SQLiteDatabase db = dbHelper.getWritableDatabase();</span>
+<span class="nc" id="L533">        db.delete(&quot;players&quot;, null, null);</span>
+<span class="nc" id="L534">        db.close();</span>
+<span class="nc" id="L535">    }</span>
+
+    public void removeAllPuzzles() {
+<span class="nc" id="L538">        SQLiteDatabase db = dbHelper.getWritableDatabase();</span>
+<span class="nc" id="L539">        db.delete(&quot;puzzles&quot;, null, null);</span>
+<span class="nc" id="L540">        db.close();</span>
+<span class="nc" id="L541">    }</span>
+
+    public ArrayList&lt;String&gt; getCryptogramFirstThreeSolvers(String name) {
+<span class="fc" id="L544">        SQLiteDatabase db = dbHelper.getReadableDatabase();</span>
+<span class="fc" id="L545">        ArrayList&lt;String&gt; solvers = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L546">        solvers.add(&quot;N/A&quot;);</span>
+<span class="fc" id="L547">        solvers.add(&quot;N/A&quot;);</span>
+<span class="fc" id="L548">        solvers.add(&quot;N/A&quot;);</span>
+<span class="fc" id="L549">        Cursor cursor = db.rawQuery(&quot;SELECT username FROM puzzles WHERE successful = 1 AND cryptoName = ? ORDER BY dateCompleted&quot;, new String[]{name});</span>
+
+<span class="fc bfc" id="L551" title="All 2 branches covered.">        for (int i = 0; i &lt; Math.min(cursor.getCount(), 3); i++) {</span>
+<span class="fc" id="L552">            cursor.moveToNext();</span>
+<span class="fc" id="L553">            solvers.add(i, cursor.getString(cursor.getColumnIndex(&quot;username&quot;)));</span>
+        }
+<span class="fc" id="L555">        cursor.close();</span>
+<span class="fc" id="L556">        db.close();</span>
+<span class="fc" id="L557">        return solvers;</span>
+    }
+
+
+    public ArrayList&lt;String&gt; getAllCryptogramNames() {
+<span class="fc" id="L562">        SQLiteDatabase db = dbHelper.getReadableDatabase();</span>
+<span class="fc" id="L563">        ArrayList&lt;String&gt; cryptArray = new ArrayList&lt;&gt;(); //just the names of the cryptograms</span>
+<span class="fc" id="L564">        Cursor cursor = db.rawQuery(&quot;SELECT cryptoName FROM cryptograms ORDER BY dateCreated&quot;, null);</span>
+
+        try {
+<span class="fc bfc" id="L567" title="All 2 branches covered.">            while (cursor.moveToNext()) {</span>
+<span class="fc" id="L568">                cryptArray.add(cursor.getString(cursor.getColumnIndex(&quot;cryptoName&quot;)));</span>
+            }
+        } finally {
+<span class="pc" id="L571">            cursor.close();</span>
+<span class="pc" id="L572">            db.close();</span>
+<span class="fc" id="L573">        }</span>
+<span class="fc" id="L574">        return cryptArray;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>Generated by the Android Gradle plugin 3.1.2</div></body></html>

@@ -1,0 +1,81 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="style_button">
+        <item name="android:textSize">@dimen/button_textsize</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="style_TextView_label">
+        <item name="android:textSize">@dimen/textView_label_textsize</item>
+    </style>
+
+    <style name="style_TextView_output">
+        <item name="android:textSize">@dimen/textView_label_textsize</item>
+    </style>
+
+    <style name="style_textView_screenTitle">
+        <item name="android:textSize">@dimen/screen_title_textsize</item>
+    </style>
+
+    <style name="style_editText">
+        <item name="android:textSize">@dimen/editText_text_textsize</item>
+        <item name="android:paddingBottom">0dp</item>
+    </style>
+
+    <style name="style_list_title">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="style_list_items">
+
+    </style>
+    
+    <style name="style_button_playCryptogramScreen" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:textSize">12sp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:enabled">false</item>
+        <item name="android:padding">6dp</item>
+    </style>
+
+    <style name="style_textView_playCryptogramScreen_characterLabels">
+        <item name="android:textSize">15sp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingLeft">3dp</item>
+        <item name="android:paddingRight">3dp</item>
+        <item name="android:textColor">#FEFEFA</item>
+        <item name="android:background">#212121</item>
+    </style>
+
+    <style name="style_editText_playCryptogramScren_characterInput">
+        <item name="android:background">@drawable/rounded_border_edittext</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:minHeight">15sp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ems">1</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingLeft">3dp</item>
+        <item name="android:paddingRight">3dp</item>
+        <item name="android:maxLength">1</item>
+    </style>
+
+</resources>
